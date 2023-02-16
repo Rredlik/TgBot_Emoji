@@ -1,0 +1,16 @@
+# Telegram
+Pyrogram==2.0.57 # dont upgrade pls, has problem with auth
+aiogram==2.24
+
+# Database
+SQLAlchemy==2.0.0
+
+# Debug
+loguru==0.6.0
+
+# Other
+asyncio==3.4.3
+tgcrypto==1.2.5
+
+#Payment
+yookassa==2.3.4
