@@ -19,7 +19,21 @@ async def __ban(app: Client, msg: Message):
     await play_stroke_anim(msg, text)
 
 
+@cmd()
+async def __bruh(app: Client, msg: Message):
+    text = (
+        "╭━━╮╱╱╱╱╱╭╮",
+        "┃╭╮┃╱╱╱╱╱┃┃",
+        "┃╰╯╰┳━┳╮╭┫╰━╮",
+        "┃╭━╮┃╭┫┃┃┃╭╮┃",
+        "┃╰━╯┃┃┃╰╯┃┃┃┃",
+        "╰━━━┻╯╰━━┻╯╰╯",
+    )
+    await play_stroke_anim(msg, text)
+
+
 def _get_text_vip_handlers() -> tuple[MessageHandler, ...]:
     return (
         MessageHandler(__ban, filters=get_vip_filters('ban')),
+        MessageHandler(__bruh, filters=get_vip_filters('bruh')),
     )
