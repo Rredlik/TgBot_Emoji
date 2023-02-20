@@ -6,6 +6,8 @@ from pyrogram.handlers import MessageHandler
 
 from misc.html_tags import b
 from user_bot.filters.main import get_vip_filters
+from user_bot.handlers.vip.channel import _get_channel_vip_handlers
+from user_bot.handlers.vip.user import _get_userProfile_vip_handlers
 from user_bot.utils import UserConfig, cmd, play_anim
 from user_bot.handlers.vip.games import _get_game_vip_handlers
 from user_bot.handlers.vip.texts import _get_text_vip_handlers
@@ -70,5 +72,6 @@ def get_vip_handlers() -> tuple | tuple[MessageHandler]:
         *_get_game_vip_handlers(),
         *_get_text_vip_handlers(),
         *_get_sticker_vip_handlers(),
-
+        *_get_userProfile_vip_handlers(),
+        *_get_channel_vip_handlers(),
     )

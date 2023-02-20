@@ -83,7 +83,7 @@ async def __input_oauth_code(msg: Message, state: FSMContext) -> None:
         return
     except PhoneCodeExpired as e:
         logger.error(e)
-        await bot.send_message(user_id, "Код подтверждения иссек, попробуйте заново ⚠️")
+        await bot.send_message(user_id, "Код подтверждения недействителен, попробуйте заново ⚠️")
         await state.finish()
         return
     except SessionPasswordNeeded as e:

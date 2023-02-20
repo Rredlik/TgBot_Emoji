@@ -1,3 +1,4 @@
+import logging
 from contextlib import suppress
 
 from loguru import logger
@@ -41,6 +42,9 @@ async def __on_start_up(dp: Dispatcher) -> None:
 
 
 def start_telegram_bot() -> None:
+    # logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    #                     level=logging.DEBUG)
+    # logger = logging.getLogger(__name__)
     bot = Bot(token=Env.TOKEN, parse_mode='HTML')
     dp = Dispatcher(bot, storage=MemoryStorage())
     executor.start_polling(dp, skip_updates=True, on_startup=__on_start_up)

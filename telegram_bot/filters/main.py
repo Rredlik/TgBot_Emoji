@@ -19,6 +19,13 @@ class NotAdmin(Filter):
         return False if is_admin(message.from_user.id) else True
 
 
+class IsVip(Filter):
+    key = "not_vip"
+
+    async def check(self, message: Message) -> bool:
+        return True if is_vip(message.from_user.id) else False
+
+
 class NotVip(Filter):
     key = "not_vip"
 
