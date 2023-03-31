@@ -20,9 +20,17 @@ async def __buy_vip(msg: Message) -> None:
     bot: Bot = msg.bot
     user_id = msg.from_user.id
     user = get_user_by_telegram_id(user_id)
+    print(f'user: {user.telegram_id}')
 
     if user and not user.payment:
-        payment = Payment.create(get_payment_info(), uuid4())
+        payment_info = get_payment_info()
+        uuID = uuid4()
+        print(f'payment_info: {payment_info}')
+        print(f'uuID: {uuID}')
+        strPayment = Payment
+        print(f'strPayment: {strPayment}')
+        payment = Payment.create(payment_info, idempotency_key=uuID)
+
         create_user_payment(user, payment.id)
     else:
         payment = Payment.find_one(user.payment.key)
