@@ -1,7 +1,7 @@
 from sqlalchemy import exc
 
 from telegram_bot.database.main import Database
-from telegram_bot.database.models import User, Session
+from telegram_bot.database.models import User, Session, Message
 
 
 def get_user_by_telegram_id(telegram_id: int) -> User | None:
@@ -33,3 +33,10 @@ def get_sessions_enable_count(vip: bool) -> int:
         User.admin == 0,
         User.session.has(Session.enable == 1)
     ).count()
+
+
+def get_message_by_id(message_id):
+    try:
+        return Database().session.query(Message).filter(Message.message_id == message_id).one()
+    except exc.NoResultFound:
+        return None

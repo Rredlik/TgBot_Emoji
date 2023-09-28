@@ -14,6 +14,19 @@ class User(Database.BASE):
     payment = relationship('Payment', uselist=False, backref="USER", passive_deletes=True)
 
 
+class Message(Database.BASE):
+    __tablename__ = 'private_messages'
+    id = Column(Integer, primary_key=True)
+    chat_owner = Column(Integer, ForeignKey('USER.telegram_id'))
+    date = Column(String, default=0)
+    from_user_id = Column(Integer, nullable=False)
+    to_user_id = Column(Integer, nullable=False)
+    message_text = Column(String, default=0)
+    message_id = Column(Integer, nullable=False, unique=True)
+    edited_to = Column(String, default=0)
+    is_deleted = Column(Integer, default=0)
+
+
 class Session(Database.BASE):
     __tablename__ = 'SESSION'
     id = Column(Integer, primary_key=True)

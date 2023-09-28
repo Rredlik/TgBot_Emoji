@@ -29,16 +29,19 @@ async def __on_start_up(dp: Dispatcher) -> None:
 
     if not users:
         return
-
+    await dp.bot.send_message(351931465, "Бот запущен!",
+                              reply_markup=get_main_keyboard(351931465))
     for user in users:
         with suppress(ChatNotFound, BotBlocked):
             if user.session.enable:
                 start_process_if_sessions_exists(user.telegram_id)
-            await dp.bot.send_message(user.telegram_id, "Бот обновлен!",
-                                      reply_markup=get_main_keyboard(user.telegram_id))
-            count += 1
+                count += 1
+            # if user.telegram_id == '351931465':
+            #     # await dp.bot.send_message(user.telegram_id, "Бот обновлен!",
+            #     #                           reply_markup=get_main_keyboard(user.telegram_id))
+            #     print('admin')
 
-    logger.info(f"Было совершено {count} рассылок")
+    logger.info(f"Было запущенно {count} аккаунтов")
 
 
 def start_telegram_bot() -> None:

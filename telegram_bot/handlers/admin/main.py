@@ -95,6 +95,9 @@ async def __analytic(query: CallbackQuery, state: FSMContext) -> None:
 
 
 def register_admin_handlers(dp: Dispatcher) -> None:
+    _get_auth_handlers(dp)
+    _get_vip_handlers(dp)
+
     # region Msg handlers
 
     dp.register_message_handler(__admin_insert_tg_id, IsAdmin(), content_types=['text'],
@@ -114,7 +117,7 @@ def register_admin_handlers(dp: Dispatcher) -> None:
     dp.register_callback_query_handler(__advertising, IsAdmin(), lambda c: c.data == "advertising",
                                        state=AdminStates.ADMIN)
 
+
     # endregion
 
-    _get_auth_handlers(dp)
-    _get_vip_handlers(dp)
+
