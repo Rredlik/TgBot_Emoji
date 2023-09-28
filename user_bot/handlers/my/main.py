@@ -58,33 +58,6 @@ async def __checkDeletingMessages(app: Client, messages):
             print(f'channel delete: {user.id} - {msg.chat.id} - {msg.id}')
 
 
-        # below_message = await app.get_messages(1241977405, [5801, 5803, 19946, 19948, 23695, 23697, 29287, 29289])
-        # print(below_message)
-        # below_message = await app.get_messages(msg.id-1)
-        # next_message = await app.get_messages(msg.id+1)
-        # print(below_message, next_message)
-
-        # below_message = await app.get_messages(5802 - 1)
-        # next_message = await app.get_messages(5802 + 1)
-        # print(below_message, next_message)
-        #
-        # below_message = await app.get_messages(19947 - 1)
-        # next_message = await app.get_messages(19947 + 1)
-        # print(below_message, next_message)
-
-
-# No argument supplied. Either pass message_ids or reply_to_message_ids
-# Traceback (most recent call last):
-#   File "D:\Programming\Python_Projects\EmojiBotTG\venv\lib\site-packages\pyrogram\dispatcher.py", line 240, in handler_worker
-#     await handler.callback(self.client, *args)
-#   File "D:\Programming\Python_Projects\EmojiBotTG\user_bot\handlers\my\main.py", line 53, in __checkDeletingMessages
-#     below_message = await app.get_messages(msg.id-1)
-#   File "D:\Programming\Python_Projects\EmojiBotTG\venv\lib\site-packages\pyrogram\methods\messages\get_messages.py", line 97, in get_messages
-#     raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
-# ValueError: No argument supplied. Either pass message_ids or reply_to_message_ids
-
-
-#5802   19947   23696
 async def checkMessageType(msg):
     msg_id = msg.id
     if msg.text is not None:
@@ -97,6 +70,8 @@ async def checkMessageType(msg):
         text = f'voice|{msg.voice.file_id}'
     elif msg.video_note is not None:
         text = f'video_note|{msg.video_note.file_id}'
+    elif msg.sticker is not None:
+        text = f'sticker|{msg.sticker.file_id}|{msg.sticker.emoji}'
     else:
         text = None
 
