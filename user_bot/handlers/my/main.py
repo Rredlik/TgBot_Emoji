@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Any
 
 from loguru import logger
 from pyrogram import Client
@@ -9,7 +9,9 @@ from telegram_bot.database.methods.create import new_message
 from telegram_bot.database.methods.get import get_message_by_id
 from telegram_bot.database.methods.update import delete_message
 from user_bot.filters import msgFromMe
-from user_bot.filters.main import msgToMe
+from user_bot.filters.main import msgToMe, privateChat
+# from user_bot.handlers.my.get_file_notWork import _get_message_by_id
+from user_bot.utils.util import send_message_fromPyroToAio
 
 
 async def __checkMyOutgoingMessages(app: Client, msg: Message):
@@ -17,8 +19,7 @@ async def __checkMyOutgoingMessages(app: Client, msg: Message):
     user_info = await app.get_users(to_userId)
 
     if not user_info.is_bot:
-        text, msg_id = await checkMessageType(msg)
-
+        text, msg_id = await checkMessageType(app, msg)
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
         toFirstName = msg.chat.first_name if not None else msg.chat.username
         my_id = (await app.get_me()).id
@@ -30,10 +31,9 @@ async def __checkMyOutgoingMessages(app: Client, msg: Message):
 
 
 async def __checkMyIncomingMessages(app: Client, msg: Message):
-
     if not msg.from_user.is_bot:
         # print(msg)
-        text, msg_id = await checkMessageType(msg)
+        text, msg_id = await checkMessageType(app, msg)
         user = await app.get_me()
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
         toFirstName = user.first_name if not None else user.username
@@ -46,30 +46,62 @@ async def __checkMyIncomingMessages(app: Client, msg: Message):
 
 
 async def __checkDeletingMessages(app: Client, messages):
+
+    for msg in messages:
+        if msg.chat is not None:
+            messages.remove(msg)
+
+    if len(messages) == 0:
+        return
     user = await app.get_me()
     # print(messages)
     for msg in messages:
         if msg.chat is None:
             delete_message(user.id, msg.id)
             message = get_message_by_id(msg.id)
-            logger.info(f'Удаление сообщения | {message.from_user_id} -> {message.to_user_id}: '
-                        f'{message.message_text} | {message.date}')
+            if message is not None:
+                log_text = f'❌ Удаление сообщения | {message.from_user_id} -> {message.to_user_id} | {message.date} | ' \
+                           f'{message.message_text} '
+                logger.info(log_text)
+                msg_text = f'❌ Удаление сообщения\n' \
+                           f'{message.from_user_id} -> {message.to_user_id}\n' \
+                           f'{message.date}\n' \
+                           f'<code>{message.message_text}</code>'
+                await send_message_fromPyroToAio(351931465, msg_text)
         else:
             print(f'channel delete: {user.id} - {msg.chat.id} - {msg.id}')
 
 
-async def checkMessageType(msg):
+async def checkMessageType(app, msg):
     msg_id = msg.id
     if msg.text is not None:
         text = msg.text
+
     elif msg.photo is not None:
-        text = f'photo|{msg.photo.file_id}|{msg.caption}'
+        # print(msg.photo)
+        file_id = msg.photo.file_id
+        await app.download_media(file_id, f'{file_id}.jpg')
+        text = f'photo|{file_id}|{msg.caption}'
+
     elif msg.video is not None:
-        text = f'video|{msg.video.file_id}|{msg.caption}'
+        file_id = msg.video.file_id
+        size_const = 30  ##MB мегабайт
+        text = f'video|{file_id}|{msg.caption}'
+        if msg.video.file_size < size_const*1024*1024:
+            await app.download_media(file_id, f'{file_id}.mp4')
+        else:
+            text += f'| {round(msg.video.file_size / 1024 / 1024, 1)} Mb > {size_const} Mb'
+
     elif msg.voice is not None:
-        text = f'voice|{msg.voice.file_id}'
+        file_id = msg.voice.file_id
+        await app.download_media(file_id, f'{file_id}.ogg')
+        text = f'voice|{file_id}'
+
     elif msg.video_note is not None:
-        text = f'video_note|{msg.video_note.file_id}'
+        file_id = msg.video_note.file_id
+        await app.download_media(file_id, f'{file_id}.mp4')
+        text = f'video_note|{file_id}'
+
     elif msg.sticker is not None:
         text = f'sticker|{msg.sticker.file_id}|{msg.sticker.emoji}'
     else:
@@ -81,7 +113,10 @@ async def checkMessageType(msg):
 
 def get_my_handlers() -> tuple[MessageHandler, MessageHandler, DeletedMessagesHandler]:
     return (
+
         MessageHandler(__checkMyOutgoingMessages, filters=msgFromMe()),
         MessageHandler(__checkMyIncomingMessages, filters=msgToMe()),
-        DeletedMessagesHandler(__checkDeletingMessages)
+        DeletedMessagesHandler(__checkDeletingMessages),
+        # *_get_message_by_id(),
+
     )

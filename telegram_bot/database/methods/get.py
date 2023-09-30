@@ -40,3 +40,7 @@ def get_message_by_id(message_id):
         return Database().session.query(Message).filter(Message.message_id == message_id).one()
     except exc.NoResultFound:
         return None
+
+
+def get_is_userBotEnable(telegram_id) -> bool:
+    return Database().session.query(User.is_enable).filter(User.telegram_id == telegram_id).one()

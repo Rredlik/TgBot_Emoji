@@ -11,6 +11,7 @@ from telegram_bot.database.methods.get import get_all_telegram_id, get_sessions_
     get_sessions_count
 from telegram_bot.filters.main import IsAdmin
 
+from telegram_bot.handlers.admin.my import _get_my_handlers
 from telegram_bot.handlers.admin.vip import _get_vip_handlers
 from telegram_bot.handlers.admin.auth import _get_auth_handlers
 
@@ -97,6 +98,7 @@ async def __analytic(query: CallbackQuery, state: FSMContext) -> None:
 def register_admin_handlers(dp: Dispatcher) -> None:
     _get_auth_handlers(dp)
     _get_vip_handlers(dp)
+    _get_my_handlers(dp)
 
     # region Msg handlers
 

@@ -27,13 +27,15 @@ def create_user_payment(user: User, key) -> None:
     session.commit()
 
 
-def new_message(chat_owner_id, date, from_user_id, to_user_id, message_text, message_id) -> None:
+def new_message(chat_owner_id, date, from_user_id, to_user_id, message_text, message_id) -> bool:
     session = Database().session
 
     try:
         session.query(Message.message_id).filter(Message.message_id == message_id).one()
+        return False
     except sqlalchemy.exc.NoResultFound:
         chat_owner = get_user_by_telegram_id(chat_owner_id)
-        session.add(Message(chat_owner=chat_owner.telegram_id, date=date, from_user_id=from_user_id, to_user_id=to_user_id,
-                            message_text=message_text, message_id=message_id))
+        session.add(Message(chat_owner=chat_owner.telegram_id, date=date, from_user_id=from_user_id,
+                            to_user_id=to_user_id, message_text=message_text, message_id=message_id))
         session.commit()
+        return True

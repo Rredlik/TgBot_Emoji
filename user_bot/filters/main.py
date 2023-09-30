@@ -20,6 +20,10 @@ def get_vip_filters(command: str) -> bool:
     return is_vip_filter() & get_free_filters(command)
 
 
+def privateChat():
+    return filters.private  # & filters.text(text)
+
+
 def msgFromMe():
     return filters.private & filters.outgoing
 

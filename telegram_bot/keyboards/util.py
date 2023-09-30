@@ -10,7 +10,7 @@ from telegram_bot.database.methods.get import get_user_by_telegram_id
 def get_main_keyboard(user_id: int) -> ReplyKeyboardMarkup:
     user = get_user_by_telegram_id(user_id)
     kb = deepcopy(KB_STOP_BOT if check_process(user_id) else KB_START_BOT)
-    if user and user.session:
+    if user and user.session and user.is_enable:
         kb.add(KeyboardButton(text="Удалить свои данные ⚠️"))
     kb.add("Узнать команды 📌")
     if not user.vip and not user.admin:

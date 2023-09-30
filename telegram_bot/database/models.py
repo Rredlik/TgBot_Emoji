@@ -10,6 +10,7 @@ class User(Database.BASE):
     telegram_id = Column(Integer, nullable=False)
     vip = Column(Integer, default=0)
     admin = Column(Integer, default=0)
+    is_enable = Column(Integer, default=0)
     session = relationship('Session', uselist=False, backref="USER", passive_deletes=True)
     payment = relationship('Payment', uselist=False, backref="USER", passive_deletes=True)
 

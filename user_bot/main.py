@@ -14,7 +14,7 @@ def start_user_bot() -> None:
         name=telegram_id,
         session_string=string_session,
         in_memory=True,
-        device_model='Redmi Note 11S',
+        device_model='Redmi Note 11S'
         # app_version='10.1.0',
     )
     register_all_handlers(client)

@@ -14,6 +14,7 @@ from misc.path import PathManager
 from telegram_bot.database.methods.create import create_session
 from telegram_bot.database.methods.delete import delete_session
 from telegram_bot.database.methods.get import get_user_by_telegram_id
+from telegram_bot.database.methods.update import switch_is_userBotEnable
 
 from telegram_bot.utils import Env, CreateUserBotState
 from telegram_bot.handlers.user.util import _user_agreement_text
@@ -141,11 +142,12 @@ async def __start_input_user_settings(msg: Message, state: FSMContext) -> None:
 
     user = get_user_by_telegram_id(user_id)
 
-    if check_process(user_id):
+    if check_process(user_id) and user.is_enable:
         keyboard = get_main_keyboard(user_id)
         await bot.send_message(user_id, "Ваш бот уже запущен!", reply_markup=keyboard)
         return
-    if user and user.session:
+
+    if user and user.session and not user.is_enable:
         start_process_if_sessions_exists(user_id)
         keyboard = get_main_keyboard(user_id)
         await state.finish()
@@ -176,7 +178,8 @@ async def __stop_bot(msg: Message) -> None:
     user_id = msg.from_user.id
 
     if check_process(user_id):
-        kill_process(user_id)
+        # kill_process(user_id)
+        switch_is_userBotEnable(user_id, 0)
         keyboard = get_main_keyboard(user_id)
         await bot.send_message(user_id, "Бот остановлен! ⚠️", reply_markup=keyboard)
 
@@ -184,8 +187,9 @@ async def __stop_bot(msg: Message) -> None:
 async def __delete_session(msg: Message) -> None:
     bot: Bot = msg.bot
     user_id = msg.from_user.id
-    delete_session(user_id)
-    kill_process(user_id)
+    # delete_session(user_id)
+    # kill_process(user_id)
+    switch_is_userBotEnable(user_id, 0)
     keyboard = get_main_keyboard(user_id)
     await bot.send_message(user_id, "Ваши данные удалены и User bot остановлен! ⚠️", reply_markup=keyboard)
 

@@ -1,19 +1,15 @@
-import logging
 from contextlib import suppress
 
+from aiogram import Dispatcher, executor
+from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
-from aiogram import Bot, Dispatcher, executor
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
-
+from loader import get_Dispatcher
 from telegram_bot.database import register_models
 from telegram_bot.database.methods.get import get_users_with_sessions
 from telegram_bot.filters import register_all_filters
-
-from telegram_bot.utils import Env
-from telegram_bot.keyboards import get_main_keyboard
 from telegram_bot.handlers import register_all_handlers
+from telegram_bot.keyboards import get_main_keyboard
 from telegram_bot.utils.process import start_process_if_sessions_exists
 
 
@@ -48,6 +44,5 @@ def start_telegram_bot() -> None:
     # logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     #                     level=logging.DEBUG)
     # logger = logging.getLogger(__name__)
-    bot = Bot(token=Env.TOKEN, parse_mode='HTML')
-    dp = Dispatcher(bot, storage=MemoryStorage())
+    dp = get_Dispatcher()
     executor.start_polling(dp, skip_updates=True, on_startup=__on_start_up)
