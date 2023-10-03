@@ -3,7 +3,7 @@
 ### To understand the architecture of the application, watch this [VIDEO](https://www.youtube.com/watch?v=W-0YoEYBSwU&t=23s)
 
 ## [Main Bot](../telegram_bot/main.py)
-1. [Setup config.py](../telegram_bot/utils/config.py):
+1. [Setup config.py](../config/config.py):
    - PRICE - price for vip access
    - HELPER_URL - telegram username (@username) for help btn
    - BOT_URL - this bot username (@bot) for advert in free commands

@@ -1,4 +1,4 @@
-from telegram_bot.utils import TgConfig
+from config import TgConfig
 from misc.html_tags import b, i
 
 

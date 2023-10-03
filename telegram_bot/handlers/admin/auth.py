@@ -5,7 +5,7 @@ from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from telegram_bot.database.methods.update import set_admin, set_vip
 from telegram_bot.filters.main import IsAdmin
 
-from telegram_bot.utils.env import Env
+from config.env import Env
 from telegram_bot.utils.states import AdminStates
 from telegram_bot.utils.process import kill_process, start_process_if_sessions_exists
 from telegram_bot.keyboards import get_main_keyboard, get_admin_keyboard

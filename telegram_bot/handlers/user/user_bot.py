@@ -16,7 +16,8 @@ from telegram_bot.database.methods.delete import delete_session
 from telegram_bot.database.methods.get import get_user_by_telegram_id
 from telegram_bot.database.methods.update import switch_is_userBotEnable
 
-from telegram_bot.utils import Env, CreateUserBotState
+from config import Env
+from telegram_bot.utils import CreateUserBotState
 from telegram_bot.handlers.user.util import _user_agreement_text
 from telegram_bot.keyboards import KB_CONTACT, KB_CANCEL_SETUP, get_main_keyboard
 from telegram_bot.utils.process import start_process_if_sessions_exists, check_process, kill_process

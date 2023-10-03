@@ -1,4 +1,4 @@
-from telegram_bot.utils import TgConfig
+from config import TgConfig
 
 
 def get_payment_info() -> dict:

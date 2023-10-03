@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from telegram_bot.utils import Env
+from config import Env
 
 
 def get_Bot():

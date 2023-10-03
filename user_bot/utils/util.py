@@ -11,7 +11,7 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageIdInvalid
 
 from loader import get_Bot
 from telegram_bot.keyboards import get_main_keyboard
-from telegram_bot.utils import TgConfig
+from config import TgConfig
 from user_bot.utils.config import UserConfig
 
 

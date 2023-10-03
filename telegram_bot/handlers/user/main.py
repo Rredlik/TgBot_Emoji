@@ -4,7 +4,7 @@ from aiogram.types import Message
 from telegram_bot.handlers.user.buy_vip import _register_vip_handlers
 from telegram_bot.handlers.user.user_bot import _register_user_bot_handlers
 
-from telegram_bot.utils import TgConfig
+from config import TgConfig
 from telegram_bot.database.methods.create import create_user
 from telegram_bot.keyboards import KB_INFO, get_main_keyboard
 
