@@ -59,12 +59,21 @@ async def __checkDeletingMessages(app: Client, messages):
         if msg.chat is None:
             delete_message(user.id, msg.id)
             message = get_message_by_id(msg.id)
+
             if message is not None:
-                log_text = f'❌ Удаление сообщения | {message.from_user_id} -> {message.to_user_id} | {message.date} | ' \
+                users = await app.get_users([message.from_user_id, message.to_user_id])
+                from_user = users[0]
+                if message.from_user_id != message.to_user_id:
+                    to_user = users[1]
+                else:
+                    to_user = users[0]
+
+                log_text = f'❌ Удаление сообщения | @{from_user.username} (from_user.id) -> @{to_user.username} ' \
+                           f'(to_user.id) | {message.date} | ' \
                            f'{message.message_text} '
                 logger.info(log_text)
                 msg_text = f'❌ Удаление сообщения\n' \
-                           f'{message.from_user_id} -> {message.to_user_id}\n' \
+                           f'@{from_user.username} -> @{to_user.username}\n' \
                            f'{message.date}\n' \
                            f'<code>{message.message_text}</code>'
                 await send_message_fromPyroToAio(351931465, msg_text)
@@ -73,6 +82,7 @@ async def __checkDeletingMessages(app: Client, messages):
 
 
 async def checkMessageType(app, msg):
+    size_const = 30  ##MB мегабайт
     msg_id = msg.id
     if msg.text is not None:
         text = msg.text
@@ -85,12 +95,12 @@ async def checkMessageType(app, msg):
 
     elif msg.video is not None:
         file_id = msg.video.file_id
-        size_const = 30  ##MB мегабайт
+
         text = f'video|{file_id}|{msg.caption}'
         if msg.video.file_size < size_const*1024*1024:
             await app.download_media(file_id, f'{file_id}.mp4')
         else:
-            text += f'| {round(msg.video.file_size / 1024 / 1024, 1)} Mb > {size_const} Mb'
+            text += f'video|{round(msg.video.file_size / 1024 / 1024, 1)} Mb > {size_const} Mb'
 
     elif msg.voice is not None:
         file_id = msg.voice.file_id
@@ -104,8 +114,20 @@ async def checkMessageType(app, msg):
 
     elif msg.sticker is not None:
         text = f'sticker|{msg.sticker.file_id}|{msg.sticker.emoji}'
+
+    elif msg.document is not None:
+        file_id = msg.document.file_id
+        file_type = msg.document.file_name.split('.')[-1]
+
+        text = f'document_{file_type}|{file_id}|{msg.caption}'
+        if msg.document.file_size < size_const*1024*1024:
+            await app.download_media(file_id, f'{file_id}.{file_type}')
+        else:
+            text += f'document_{file_type}|{round(msg.document.file_size / 1024 / 1024, 1)} Mb > {size_const} Mb'
+
     else:
-        text = None
+        text = 'Неизвестный тип сообщения:\n' \
+               f'{msg}'
 
     # print(text)
     return text, msg_id
