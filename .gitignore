@@ -162,6 +162,6 @@ $RECYCLE.BIN/
 *.lnk
 static/
 telegram_bot/database/FileDatabase/Database.db
-#Database.db
+Database.db
 logs
 downloads
