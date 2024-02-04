@@ -9,7 +9,7 @@ from pyrogram.types import Message, User
 
 from telegram_bot.database.methods.create import new_message
 from telegram_bot.database.methods.get import get_message_by_id
-from telegram_bot.database.methods.update import delete_message
+from telegram_bot.database.methods.update import mark_message_as_deleted
 from user_bot.filters import msgFromMe
 from user_bot.filters.main import msgToMe, privateChat
 # from user_bot.handlers.my.get_file_notWork import _get_message_by_id
@@ -65,7 +65,7 @@ async def __checkDeletingMessages(app: Client, messages):
     # print(messages)
     for msg in messages:
         if msg.chat is None:
-            delete_message(user.id, msg.id)
+            mark_message_as_deleted(user.id, msg.id)
             message = get_message_by_id(msg.id)
 
             if message is not None:
