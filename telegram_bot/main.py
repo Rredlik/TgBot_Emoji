@@ -1,11 +1,10 @@
-import logging
 from contextlib import suppress
 
 from aiogram import Dispatcher, executor
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
-from loader import get_Dispatcher
+from loader import dp
 from telegram_bot.database import register_models
 from telegram_bot.database.methods.get import get_users_with_sessions
 from telegram_bot.filters import register_all_filters
@@ -45,5 +44,5 @@ def start_telegram_bot() -> None:
     # logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     #                     level=logging.DEBUG)
     # logger = logging.getLogger(__name__)
-    dp = get_Dispatcher()
+    # dp = get_Dispatcher()
     executor.start_polling(dp, skip_updates=True, on_startup=__on_start_up)
