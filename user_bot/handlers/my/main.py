@@ -1,9 +1,11 @@
 from typing import Tuple, Any
 
+import asyncio
 from loguru import logger
 from pyrogram import Client
+from pyrogram.errors import exceptions
 from pyrogram.handlers import MessageHandler, DeletedMessagesHandler
-from pyrogram.types import Message
+from pyrogram.types import Message, User
 
 from telegram_bot.database.methods.create import new_message
 from telegram_bot.database.methods.get import get_message_by_id
@@ -23,7 +25,9 @@ async def __checkMyOutgoingMessages(app: Client, msg: Message):
         text, msg_id = await checkMessageType(app, msg)
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
         toFirstName = msg.chat.first_name if not None else msg.chat.username
-        my_id = (await app.get_me()).id
+        my_id = msg.from_user.id
+        # print('__checkMyOutgoingMessages', msg)
+        # print('__checkMyOutgoingMessages', app)
         date = str(msg.date)
         new_message(chat_owner_id=my_id, date=date, from_user_id=my_id, to_user_id=to_userId,
                     message_text=text, message_id=msg_id)
@@ -35,7 +39,11 @@ async def __checkMyIncomingMessages(app: Client, msg: Message):
     if not msg.from_user.is_bot:
         # print(msg)
         text, msg_id = await checkMessageType(app, msg)
-        user = await app.get_me()
+        user = await get_me_antiFlood(app)
+        # user_id = app.session
+        # print(user_id)
+        # print('__checkMyIncomingMessages', msg)
+        # print('__checkMyIncomingMessages', app)
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
         toFirstName = user.first_name if not None else user.username
 
@@ -54,7 +62,7 @@ async def __checkDeletingMessages(app: Client, messages):
 
     if len(messages) == 0:
         return
-    user = await app.get_me()
+    user = await get_me_antiFlood(app)
     # print(messages)
     for msg in messages:
         if msg.chat is None:
@@ -132,6 +140,24 @@ async def checkMessageType(app, msg):
 
     # print(text)
     return text, msg_id
+
+
+async def get_me_antiFlood(app: Client) -> User:
+
+    try:
+        # user_id = await app.session.user_id
+        user = await app.get_me()
+    except exceptions.FloodWait as e:
+        # print("get_me_antiFlood:", e)
+        # print("get_me_antiFlood:", e.value)
+        logger.error(f"Flood limit is exceeded. Sleep {e.value} seconds.")
+        await asyncio.sleep(e.value)
+        user = await get_me_antiFlood(app)
+        return user  # Recursive call
+    except Exception as er:
+        logger.error(f"{er}")
+    else:
+        return user
 
 
 def get_my_handlers() -> tuple[MessageHandler, MessageHandler, DeletedMessagesHandler]:

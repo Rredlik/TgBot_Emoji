@@ -5,7 +5,7 @@ from config import Env
 
 
 def get_Bot():
-    bot = Bot(token=Env.TOKEN, parse_mode='HTML')
+    bot = Bot(token=Env.BOT_TOKEN, parse_mode='HTML')
     return bot
 
 
