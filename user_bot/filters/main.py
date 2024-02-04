@@ -25,6 +25,7 @@ def privateChat():
 
 
 def msgFromMe():
+    
     return filters.private & filters.outgoing
 
 
