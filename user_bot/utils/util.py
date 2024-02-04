@@ -46,7 +46,5 @@ async def play_anim(msg: Message, anims: tuple[str, ...], tick: float | int = 0.
 
 
 async def send_message_fromPyroToAio(user_id, msg) -> None:
-    # bot: Bot = get_Bot()
-    # await bot.get_session()
     await bot.send_message(chat_id=user_id, text=msg,  reply_markup=get_main_keyboard(user_id))
     # await bot.session.close()
