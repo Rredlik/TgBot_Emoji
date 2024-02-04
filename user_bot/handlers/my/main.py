@@ -41,7 +41,6 @@ async def __checkMyIncomingMessages(app: Client, msg: Message):
         text, msg_id = await checkMessageType(app, msg)
         user = await get_me_antiFlood(app)
         # user_id = app.session
-        # print(user_id)
         # print('__checkMyIncomingMessages', msg)
         # print('__checkMyIncomingMessages', app)
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
