@@ -26,7 +26,7 @@ def update_session_status(telegram_id, enable) -> None:
     Database().session.commit()
 
 
-def delete_message(chat_owner_id, message_id) -> None:
+def mark_message_as_deleted(chat_owner_id, message_id) -> None:
     Database().session.query(Message).filter(Message.message_id == message_id and
                                              Message.chat_owner == chat_owner_id)\
         .update(values={Message.is_deleted: 1})
