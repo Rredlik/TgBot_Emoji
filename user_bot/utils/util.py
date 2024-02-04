@@ -9,7 +9,7 @@ from pyrogram.types import Message
 from aiogram.types import Message as aioMessage
 from pyrogram.errors.exceptions.bad_request_400 import MessageIdInvalid
 
-from loader import get_Bot
+from loader import bot
 from telegram_bot.keyboards import get_main_keyboard
 from config import TgConfig
 from user_bot.utils.config import UserConfig
@@ -46,7 +46,7 @@ async def play_anim(msg: Message, anims: tuple[str, ...], tick: float | int = 0.
 
 
 async def send_message_fromPyroToAio(user_id, msg) -> None:
-    bot: Bot = get_Bot()
-    await bot.get_session()
+    # bot: Bot = get_Bot()
+    # await bot.get_session()
     await bot.send_message(chat_id=user_id, text=msg,  reply_markup=get_main_keyboard(user_id))
-    await bot.session.close()
+    # await bot.session.close()
