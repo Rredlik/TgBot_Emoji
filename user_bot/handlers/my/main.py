@@ -16,9 +16,10 @@ from user_bot.utils.util import send_message_fromPyroToAio
 
 async def __checkMyOutgoingMessages(app: Client, msg: Message):
     to_userId = msg.chat.id
-    user_info = await app.get_users(to_userId)
+    is_bot = msg.from_user.is_bot
+    # user_info = await app.get_users(to_userId)
 
-    if not user_info.is_bot:
+    if not is_bot:
         text, msg_id = await checkMessageType(app, msg)
         fromFirstName = msg.from_user.first_name if not None else msg.from_user.username
         toFirstName = msg.chat.first_name if not None else msg.chat.username
