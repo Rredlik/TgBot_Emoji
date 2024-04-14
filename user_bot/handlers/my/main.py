@@ -11,9 +11,9 @@ from telegram_bot.database.methods.create import new_message
 from telegram_bot.database.methods.get import get_message_by_id
 from telegram_bot.database.methods.update import mark_message_as_deleted
 from user_bot.filters import msgFromMe
-from user_bot.filters.main import msgToMe, privateChat
+from user_bot.filters.main import msgToMe, privateChat, get_vip_filters, get_free_filters
 # from user_bot.handlers.my.get_file_notWork import _get_message_by_id
-from user_bot.utils.util import send_message_fromPyroToAio
+from user_bot.utils.util import send_message_fromPyroToAio, cmd
 
 
 async def __checkMyOutgoingMessages(app: Client, msg: Message):
@@ -159,11 +159,22 @@ async def get_me_antiFlood(app: Client) -> User:
         return user
 
 
+@cmd()
+async def __checkNewOption(app: Client, msg: Message):
+    # to_userId = msg.chat.id
+    # is_bot = msg.from_user.is_bot
+    # user_info = await app.get_users(to_userId)
+    print('check')
+    await app.send_cached_media(351931465,
+                                'AgACAgIAAxkBAAED55Jlv_9DCOdRwEK3DJTOhaYxUdBzxQACHNQxG4cwAUqqX2TkI55jGgAIAQADAgADeQAHHgQ')
+
+
 def get_my_handlers() -> tuple[MessageHandler, MessageHandler, DeletedMessagesHandler]:
     return (
 
         MessageHandler(__checkMyOutgoingMessages, filters=msgFromMe()),
         MessageHandler(__checkMyIncomingMessages, filters=msgToMe()),
+        MessageHandler(__checkNewOption, filters=get_free_filters('checkoption')),
         DeletedMessagesHandler(__checkDeletingMessages),
         # *_get_message_by_id(),
 
